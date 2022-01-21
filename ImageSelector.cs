@@ -75,6 +75,11 @@ namespace Jeeja_ImageLabeller
 
         public int ImagesCount() => images.Count();
 
+        public Image GetCurImage()
+        {
+            return currentImage;
+        }
+
         public Image GetNextImage()
         {
             imgIndex++;
@@ -94,7 +99,7 @@ namespace Jeeja_ImageLabeller
             imageWidth = img.Width;
             imageHeight = img.Height;
 
-            currentImage = ResizeImage(img, 1050, 526);
+            currentImage = ResizeImage(img, 1054, 526);
         }
 
         public ImageSelector(string imagesPath)

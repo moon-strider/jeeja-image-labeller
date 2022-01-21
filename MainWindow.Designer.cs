@@ -39,11 +39,13 @@
             this.autosaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cursorSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawCrosshairToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.imagePanel = new System.Windows.Forms.Panel();
             this.listBoxClass = new System.Windows.Forms.ListBox();
             this.labelImageCount = new System.Windows.Forms.Label();
             this.textBoxGoto = new System.Windows.Forms.TextBox();
+            this.buttonGoto = new System.Windows.Forms.Button();
+            this.imagePanel = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imagePanel)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonPrev
@@ -145,15 +147,6 @@
             this.drawCrosshairToolStripMenuItem.Text = "Draw crosshair";
             this.drawCrosshairToolStripMenuItem.Click += new System.EventHandler(this.drawCrosshairToolStripMenuItem_Click);
             // 
-            // imagePanel
-            // 
-            this.imagePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.imagePanel.Location = new System.Drawing.Point(12, 85);
-            this.imagePanel.Name = "imagePanel";
-            this.imagePanel.Size = new System.Drawing.Size(1050, 526);
-            this.imagePanel.TabIndex = 5;
-            this.imagePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.imagePanel_Paint);
-            // 
             // listBoxClass
             // 
             this.listBoxClass.Font = new System.Drawing.Font("Nunito", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -187,20 +180,42 @@
             this.textBoxGoto.MaxLength = 7;
             this.textBoxGoto.Name = "textBoxGoto";
             this.textBoxGoto.ShortcutsEnabled = false;
-            this.textBoxGoto.Size = new System.Drawing.Size(180, 23);
+            this.textBoxGoto.Size = new System.Drawing.Size(87, 23);
             this.textBoxGoto.TabIndex = 9;
-            this.textBoxGoto.Text = "Go to * image";
-            this.textBoxGoto.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGoto_KeyDown);
+            // 
+            // buttonGoto
+            // 
+            this.buttonGoto.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonGoto.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.buttonGoto.Font = new System.Drawing.Font("Nunito ExtraBold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonGoto.Location = new System.Drawing.Point(1165, 46);
+            this.buttonGoto.Name = "buttonGoto";
+            this.buttonGoto.Size = new System.Drawing.Size(87, 23);
+            this.buttonGoto.TabIndex = 10;
+            this.buttonGoto.Text = "Go";
+            this.buttonGoto.UseVisualStyleBackColor = true;
+            this.buttonGoto.Click += new System.EventHandler(this.buttonGoto_Click);
+            // 
+            // imagePanel
+            // 
+            this.imagePanel.Location = new System.Drawing.Point(12, 85);
+            this.imagePanel.Name = "imagePanel";
+            this.imagePanel.Size = new System.Drawing.Size(1054, 526);
+            this.imagePanel.TabIndex = 11;
+            this.imagePanel.TabStop = false;
+            this.imagePanel.MouseLeave += new System.EventHandler(this.imagePanel_MouseLeave);
+            this.imagePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseMove);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.imagePanel);
+            this.Controls.Add(this.buttonGoto);
             this.Controls.Add(this.textBoxGoto);
             this.Controls.Add(this.labelImageCount);
             this.Controls.Add(this.listBoxClass);
-            this.Controls.Add(this.imagePanel);
             this.Controls.Add(this.buttonNext);
             this.Controls.Add(this.buttonPrev);
             this.Controls.Add(this.menuStrip1);
@@ -209,6 +224,7 @@
             this.Text = "Jeeja Image Labeller";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imagePanel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -218,7 +234,6 @@
 
         private Button buttonPrev;
         private Button buttonNext;
-        private Panel imagePanel;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem loadImagesFromToolStripMenuItem;
@@ -231,5 +246,7 @@
         private ToolStripMenuItem cursorSettingsToolStripMenuItem;
         private ToolStripMenuItem drawCrosshairToolStripMenuItem;
         private TextBox textBoxGoto;
+        private Button buttonGoto;
+        private PictureBox imagePanel;
     }
 }

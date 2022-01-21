@@ -107,11 +107,57 @@ namespace Jeeja_ImageLabeller
             DrawImage(imageSelector.GetPrevImage());
         }
 
-        private void textBoxGoto_KeyDown(object sender, KeyEventArgs e)
+        private void buttonGoto_Click(object sender, EventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            try
             {
-                imageSelector.imgIndex = Convert.ToInt32(textBoxGoto.Text);
+                imageSelector.imgIndex = Convert.ToInt32(textBoxGoto.Text) - 1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error! {ex.Message}");
+                return;
+            }
+
+            DrawImage(imageSelector.curImage);
+        }
+
+        int lastX = 0;
+        int lastY = 0;
+        private void imagePanel_MouseLeave(object sender, EventArgs e)
+        {
+            if (drawCrosshairToolStripMenuItem.Checked)
+            {
+                imagePanel.Update();
+                //imagePanel.Invalidate();
+            }
+            if (imageSelector != null)
+            {
+                //imagePanel.Update();
+                DrawImage(imageSelector.curImage);
+            }
+        }
+
+        private void imagePanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (imageSelector != null)
+            {
+                DrawImage(imageSelector.GetCurImage());
+            }
+
+            if (drawCrosshairToolStripMenuItem.Checked)
+            {
+                Region r = new Region();
+                r.Union(new Rectangle(0, lastY, imagePanel.Width, 1));
+                r.Union(new Rectangle(lastX, 0, 1, imagePanel.Height));
+                //imagePanel.Invalidate(r);
+                imagePanel.Update();
+                //Graphics g = Graphics.FromHwnd(imagePanel.Handle);
+
+                g.DrawLine(Pens.Black, 0, e.Y, imagePanel.Width, e.Y);
+                g.DrawLine(Pens.Black, e.X, 0, e.X, imagePanel.Height);
+                lastX = e.X;
+                lastY = e.Y;
             }
         }
     }
