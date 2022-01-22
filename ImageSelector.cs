@@ -13,17 +13,23 @@ namespace Jeeja_ImageLabeller
     {
         private int imageIndex;
 
-        string imagePath;
-        List<string> images;
+        public List<string> images;
 
-        private List<int[]> rectangles;
+        private List<List<int[]>> rectangles;
+        private List<List<string>> classI;
 
         private Image currentImage;
 
         int imageWidth;
         int imageHeight;
 
-        public Image curImage { get { return currentImage; } }
+        public Image curImage { 
+            get 
+            {
+                SetResizeImage(Image.FromFile(images[imgIndex]));
+                return currentImage;
+            } 
+        }
 
         public int imgIndex
         {
@@ -41,9 +47,14 @@ namespace Jeeja_ImageLabeller
             }
         }
 
-        public List<int[]> Rectangles
+        public List<List<int[]>> Rectangles
         {
             get { return rectangles; }
+        }
+
+        public List<List<string>> ClassI
+        {
+            get { return classI; }
         }
 
         public static Bitmap ResizeImage(Image image, int width, int height)
@@ -71,9 +82,23 @@ namespace Jeeja_ImageLabeller
             return destImage;
         }
 
+        public void AddClass(string str)
+        {
+            classI[imgIndex].Add(str);
+        }
+
         public void AddRectangle(int x1, int y1, int x2, int y2)
         {
-            rectangles.Add(new int[] { x1, y1, x2, y2 });
+            rectangles[imgIndex].Add(new int[] { x1, y1, x2, y2 });
+        }
+
+        public void InitRectangles() 
+        {
+            rectangles.Add(new List<int[]>());
+        }
+
+        public void InitClasses() {
+            classI.Add(new List<string>());
         }
 
         public int ImagesCount() => images.Count();
@@ -102,8 +127,10 @@ namespace Jeeja_ImageLabeller
 
         public ImageSelector(string imagesPath)
         {
-            rectangles = new List<int[]>();
+            classI = new List<List<string>>();
+            rectangles = new List<List<int[]>>();
             images = new List<string>(Directory.GetFiles(imagesPath));
+            imgIndex = 0;
             Regex regex = new Regex(@".*\.(?i)(gif|jpe?g|tiff?|png|webp|bmp)$(?-i)");
 
             for (int i = images.Count() - 1; i >= 0; --i)
@@ -112,6 +139,12 @@ namespace Jeeja_ImageLabeller
                 {
                     images.Remove(images[i]);
                 }
+            }
+
+            for (int i = 0; i < images.Count(); i++)
+            {
+                InitRectangles();
+                InitClasses();
             }
 
             Image img = Image.FromFile(images.First());
