@@ -203,6 +203,7 @@
             this.imagePanel.Size = new System.Drawing.Size(1054, 526);
             this.imagePanel.TabIndex = 11;
             this.imagePanel.TabStop = false;
+            this.imagePanel.Click += new System.EventHandler(this.imagePanel_Click);
             this.imagePanel.MouseLeave += new System.EventHandler(this.imagePanel_MouseLeave);
             this.imagePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseMove);
             // 
@@ -222,6 +223,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainWindow";
             this.Text = "Jeeja Image Labeller";
+            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imagePanel)).EndInit();

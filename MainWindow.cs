@@ -1,3 +1,5 @@
+using System.Drawing;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace Jeeja_ImageLabeller
@@ -9,6 +11,11 @@ namespace Jeeja_ImageLabeller
         string classesLocation;
         string labelsLocation;
         Graphics g;
+        Bitmap bmp;
+
+        bool p1Captured = false;
+
+        int[] p1;
 
         ImageSelector imageSelector;
 
@@ -16,6 +23,7 @@ namespace Jeeja_ImageLabeller
 
         public MainWindow()
         {
+
             InitializeComponent();
 
             listBoxClass.SelectedIndex = 0;
@@ -24,7 +32,14 @@ namespace Jeeja_ImageLabeller
             labelsLocation = ".";
             images = new List<string>(Directory.GetFiles("."));
 
-            g = imagePanel.CreateGraphics();
+        }
+
+        public void DrawRectangle(Pen pen, Graphics g, int x1, int y1, int x2, int y2)
+        {
+            g.DrawLine(pen, x1, y1, x1, y2);
+            g.DrawLine(pen, x1, y1, x2, y1);
+            g.DrawLine(pen, x2, y2, x1, y2);
+            g.DrawLine(pen, x2, y2, x2, y1);
         }
 
         private void loadListBox()
@@ -61,7 +76,7 @@ namespace Jeeja_ImageLabeller
 
             if (images.Count() > 0)
             {
-                DrawImage(imageSelector.curImage); 
+                DrawImage(imageSelector.curImage);
             }
             else
             {
@@ -73,6 +88,22 @@ namespace Jeeja_ImageLabeller
         public void DrawImage(Image image) {
             labelImageCount.Text = $"Image {imageSelector.imgIndex+1} of {imageSelector.ImagesCount()}";
             g.DrawImage(image, 0, 0);
+            DrawZones();
+        }
+
+        public void DrawZones()
+        {
+            foreach (int[] pos in imageSelector.Rectangles)
+            {
+                int x1 = pos[0];
+                int y1 = pos[1];
+                int x2 = pos[2];
+                int y2 = pos[3];
+
+                Pen pen = new Pen(Color.Black, 3);
+
+                DrawRectangle(pen, g, x1, y1, x2, y2);
+            }
         }
 
         private void saveLabelsToToolStripMenuItem_Click(object sender, EventArgs e)
@@ -135,6 +166,7 @@ namespace Jeeja_ImageLabeller
             {
                 //imagePanel.Update();
                 DrawImage(imageSelector.curImage);
+                
             }
         }
 
@@ -142,7 +174,7 @@ namespace Jeeja_ImageLabeller
         {
             if (imageSelector != null)
             {
-                DrawImage(imageSelector.GetCurImage());
+                DrawImage(imageSelector.curImage);
             }
 
             if (drawCrosshairToolStripMenuItem.Checked)
@@ -159,6 +191,46 @@ namespace Jeeja_ImageLabeller
                 lastX = e.X;
                 lastY = e.Y;
             }
+
+            if (p1Captured)
+            {
+                Pen pen = new Pen(Color.Black, 3);
+                g.DrawLine(pen, p1[0], p1[1], p1[0], e.Y);
+                g.DrawLine(pen, p1[0], p1[1], e.X, p1[1]);
+                g.DrawLine(pen, e.X, e.Y, p1[0], e.Y);
+                g.DrawLine(pen, e.X, e.Y, e.X, p1[1]);
+
+                // rect width = Math.Abs(e.X-p[0]);
+                // rect height = Math.Abs(e.Y-p[1]);
+            }
+            imagePanel.Refresh();
+        }
+
+        private void imagePanel_Click(object sender, EventArgs e)
+        {
+            if (imageSelector != null)
+            {
+                MouseEventArgs me = (MouseEventArgs)e;
+                Point coordinates = me.Location;
+                if (!p1Captured)
+                {
+                    p1 = new int[] { me.X, me.Y };
+                    p1Captured = true;
+                }
+                else
+                {
+                    imageSelector.AddRectangle(p1[0], p1[1], me.X, me.Y);
+                    p1Captured = false;
+                }
+            }
+        }
+
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
+            bmp = new Bitmap(imagePanel.Width, imagePanel.Height);
+            g = Graphics.FromImage(bmp);
+            imagePanel.Image = bmp;
+            imagePanel.Refresh();
         }
     }
 }

@@ -16,25 +16,18 @@ namespace Jeeja_ImageLabeller
         string imagePath;
         List<string> images;
 
+        private List<int[]> rectangles;
+
         private Image currentImage;
 
         int imageWidth;
         int imageHeight;
 
-        public Image curImage
-        {
-            get
-            {
-                return currentImage;
-            }
-        }
+        public Image curImage { get { return currentImage; } }
 
         public int imgIndex
         {
-            get
-            {
-                return imageIndex;
-            }
+            get { return imageIndex; }
             set
             {
                 if (value < images.Count() && value >= 0)
@@ -46,6 +39,11 @@ namespace Jeeja_ImageLabeller
                     imageIndex = 0;
                 }
             }
+        }
+
+        public List<int[]> Rectangles
+        {
+            get { return rectangles; }
         }
 
         public static Bitmap ResizeImage(Image image, int width, int height)
@@ -73,12 +71,12 @@ namespace Jeeja_ImageLabeller
             return destImage;
         }
 
-        public int ImagesCount() => images.Count();
-
-        public Image GetCurImage()
+        public void AddRectangle(int x1, int y1, int x2, int y2)
         {
-            return currentImage;
+            rectangles.Add(new int[] { x1, y1, x2, y2 });
         }
+
+        public int ImagesCount() => images.Count();
 
         public Image GetNextImage()
         {
@@ -104,6 +102,7 @@ namespace Jeeja_ImageLabeller
 
         public ImageSelector(string imagesPath)
         {
+            rectangles = new List<int[]>();
             images = new List<string>(Directory.GetFiles(imagesPath));
             Regex regex = new Regex(@".*\.(?i)(gif|jpe?g|tiff?|png|webp|bmp)$(?-i)");
 
