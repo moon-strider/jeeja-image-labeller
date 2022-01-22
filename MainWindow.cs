@@ -148,6 +148,8 @@ namespace Jeeja_ImageLabeller
         public void DrawImage(Image image) {
             labelImageCount.Text = $"Image {imageSelector.imgIndex + 1} of {imageSelector.ImagesCount()}";
             g.DrawImage(image, 0, 0);
+            System.GC.Collect();
+            System.GC.WaitForPendingFinalizers();
             DrawZones();
         }
 
@@ -164,6 +166,15 @@ namespace Jeeja_ImageLabeller
 
                 DrawRectangle(pen, g, x1, y1, x2, y2);
             }
+        }
+
+        public void CtrlZ()
+        {
+            imageSelector.Rectangles[imageSelector.imgIndex].
+                RemoveAt(imageSelector.Rectangles[imageSelector.imgIndex].Count() - 1);
+            imageSelector.ClassI[imageSelector.imgIndex].
+                RemoveAt(imageSelector.ClassI[imageSelector.imgIndex].Count() - 1);
+            imagePanel.Refresh();
         }
 
         private void saveLabelsToToolStripMenuItem_Click(object sender, EventArgs e)
@@ -290,6 +301,24 @@ namespace Jeeja_ImageLabeller
             g = Graphics.FromImage(bmp);
             imagePanel.Image = bmp;
             imagePanel.Refresh();
+        }
+
+        private void MainWindow_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.D:
+                    buttonNext_Click(sender, e);
+                    break;
+                case Keys.A:
+                    buttonPrev_Click(sender, e);
+                    break;
+            }
+
+            if (e.Control && e.KeyCode == Keys.Z)
+            {
+                CtrlZ();
+            }
         }
     }
 }

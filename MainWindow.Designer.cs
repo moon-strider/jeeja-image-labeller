@@ -92,8 +92,8 @@
             this.loadImagesFromToolStripMenuItem,
             this.loadClassesFromToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(150, 33);
-            this.settingsToolStripMenuItem.Text = "Load settings";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(179, 33);
+            this.settingsToolStripMenuItem.Text = "Loading settings";
             // 
             // loadImagesFromToolStripMenuItem
             // 
@@ -115,8 +115,8 @@
             this.saveLabelsToToolStripMenuItem,
             this.autosaveToolStripMenuItem});
             this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
-            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(150, 33);
-            this.saveSettingsToolStripMenuItem.Text = "Save settings";
+            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(168, 33);
+            this.saveSettingsToolStripMenuItem.Text = "Saving settings";
             // 
             // saveLabelsToToolStripMenuItem
             // 
@@ -224,6 +224,7 @@
             this.Name = "MainWindow";
             this.Text = "Jeeja Image Labeller";
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.MainWindow_PreviewKeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imagePanel)).EndInit();
