@@ -27,6 +27,7 @@ namespace Jeeja_ImageLabeller
         {
 
             InitializeComponent();
+            KeyPreview = true;
 
             listBoxClass.SelectedIndex = 0;
             imagesLocation = ".";
@@ -170,11 +171,14 @@ namespace Jeeja_ImageLabeller
 
         public void CtrlZ()
         {
-            imageSelector.Rectangles[imageSelector.imgIndex].
-                RemoveAt(imageSelector.Rectangles[imageSelector.imgIndex].Count() - 1);
-            imageSelector.ClassI[imageSelector.imgIndex].
-                RemoveAt(imageSelector.ClassI[imageSelector.imgIndex].Count() - 1);
-            imagePanel.Refresh();
+            if (imageSelector != null & imageSelector.Rectangles[imageSelector.imgIndex].Count() > 0)
+            {
+                imageSelector.Rectangles[imageSelector.imgIndex].
+                    RemoveAt(imageSelector.Rectangles[imageSelector.imgIndex].Count() - 1);
+                imageSelector.ClassI[imageSelector.imgIndex].
+                    RemoveAt(imageSelector.ClassI[imageSelector.imgIndex].Count() - 1);
+                imagePanel.Refresh();
+            }
         }
 
         private void saveLabelsToToolStripMenuItem_Click(object sender, EventArgs e)
@@ -280,17 +284,24 @@ namespace Jeeja_ImageLabeller
             if (imageSelector != null)
             {
                 MouseEventArgs me = (MouseEventArgs)e;
-                Point coordinates = me.Location;
-                if (!p1Captured)
+                if (me.Button == MouseButtons.Left)
                 {
-                    p1 = new int[] { me.X, me.Y };
-                    p1Captured = true;
+                    Point coordinates = me.Location;
+                    if (!p1Captured)
+                    {
+                        p1 = new int[] { me.X, me.Y };
+                        p1Captured = true;
+                    }
+                    else
+                    {
+                        imageSelector.AddRectangle(p1[0], p1[1], me.X, me.Y);
+                        imageSelector.AddClass(listBoxClass.SelectedItem.ToString());
+                        p1Captured = false;
+                    }
                 }
-                else
+                else if (me.Button == MouseButtons.Right)
                 {
-                    imageSelector.AddRectangle(p1[0], p1[1], me.X, me.Y);
-                    imageSelector.AddClass(listBoxClass.SelectedItem.ToString());
-                    p1Captured = false;
+                    CtrlZ();
                 }
             }
         }
@@ -305,14 +316,12 @@ namespace Jeeja_ImageLabeller
 
         private void MainWindow_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            switch (e.KeyCode)
-            {
-                case Keys.D:
-                    buttonNext_Click(sender, e);
-                    break;
-                case Keys.A:
-                    buttonPrev_Click(sender, e);
-                    break;
+            MessageBox.Show("jeja");
+            if (e.KeyCode == Keys.D) {
+                buttonNext_Click(sender, e);
+            }
+            if (e.KeyCode == Keys.A) {
+                buttonPrev_Click(sender, e);
             }
 
             if (e.Control && e.KeyCode == Keys.Z)
