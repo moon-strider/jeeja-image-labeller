@@ -44,6 +44,9 @@
             this.textBoxGoto = new System.Windows.Forms.TextBox();
             this.buttonGoto = new System.Windows.Forms.Button();
             this.imagePanel = new System.Windows.Forms.PictureBox();
+            this.labellingModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageSegmentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.datasetTTVSplitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imagePanel)).BeginInit();
             this.SuspendLayout();
@@ -52,7 +55,7 @@
             // 
             this.buttonPrev.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonPrev.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonPrev.Font = new System.Drawing.Font("Nunito ExtraBold", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonPrev.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.buttonPrev.Location = new System.Drawing.Point(12, 619);
             this.buttonPrev.Name = "buttonPrev";
             this.buttonPrev.Size = new System.Drawing.Size(625, 50);
@@ -65,7 +68,7 @@
             // 
             this.buttonNext.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonNext.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonNext.Font = new System.Drawing.Font("Nunito ExtraBold", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.buttonNext.Location = new System.Drawing.Point(643, 619);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(609, 50);
@@ -76,14 +79,15 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Font = new System.Drawing.Font("Nunito", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.menuStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingsToolStripMenuItem,
             this.saveSettingsToolStripMenuItem,
-            this.cursorSettingsToolStripMenuItem});
+            this.cursorSettingsToolStripMenuItem,
+            this.labellingModeToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1264, 37);
+            this.menuStrip1.Size = new System.Drawing.Size(1264, 33);
             this.menuStrip1.TabIndex = 6;
             // 
             // settingsToolStripMenuItem
@@ -92,20 +96,20 @@
             this.loadImagesFromToolStripMenuItem,
             this.loadClassesFromToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(179, 33);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(182, 29);
             this.settingsToolStripMenuItem.Text = "Loading settings";
             // 
             // loadImagesFromToolStripMenuItem
             // 
             this.loadImagesFromToolStripMenuItem.Name = "loadImagesFromToolStripMenuItem";
-            this.loadImagesFromToolStripMenuItem.Size = new System.Drawing.Size(255, 34);
+            this.loadImagesFromToolStripMenuItem.Size = new System.Drawing.Size(259, 30);
             this.loadImagesFromToolStripMenuItem.Text = "Load images from";
             this.loadImagesFromToolStripMenuItem.Click += new System.EventHandler(this.loadImagesFromToolStripMenuItem_Click);
             // 
             // loadClassesFromToolStripMenuItem
             // 
             this.loadClassesFromToolStripMenuItem.Name = "loadClassesFromToolStripMenuItem";
-            this.loadClassesFromToolStripMenuItem.Size = new System.Drawing.Size(255, 34);
+            this.loadClassesFromToolStripMenuItem.Size = new System.Drawing.Size(259, 30);
             this.loadClassesFromToolStripMenuItem.Text = "Load classes from";
             this.loadClassesFromToolStripMenuItem.Click += new System.EventHandler(this.loadClassesFromToolStripMenuItem_Click);
             // 
@@ -115,20 +119,20 @@
             this.saveLabelsToToolStripMenuItem,
             this.autosaveToolStripMenuItem});
             this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
-            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(168, 33);
+            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(171, 29);
             this.saveSettingsToolStripMenuItem.Text = "Saving settings";
             // 
             // saveLabelsToToolStripMenuItem
             // 
             this.saveLabelsToToolStripMenuItem.Name = "saveLabelsToToolStripMenuItem";
-            this.saveLabelsToToolStripMenuItem.Size = new System.Drawing.Size(217, 34);
+            this.saveLabelsToToolStripMenuItem.Size = new System.Drawing.Size(220, 30);
             this.saveLabelsToToolStripMenuItem.Text = "Save labels to";
             this.saveLabelsToToolStripMenuItem.Click += new System.EventHandler(this.saveLabelsToToolStripMenuItem_Click);
             // 
             // autosaveToolStripMenuItem
             // 
             this.autosaveToolStripMenuItem.Name = "autosaveToolStripMenuItem";
-            this.autosaveToolStripMenuItem.Size = new System.Drawing.Size(217, 34);
+            this.autosaveToolStripMenuItem.Size = new System.Drawing.Size(220, 30);
             this.autosaveToolStripMenuItem.Text = "Autosave";
             this.autosaveToolStripMenuItem.Click += new System.EventHandler(this.autosaveToolStripMenuItem_Click);
             // 
@@ -137,22 +141,22 @@
             this.cursorSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.drawCrosshairToolStripMenuItem});
             this.cursorSettingsToolStripMenuItem.Name = "cursorSettingsToolStripMenuItem";
-            this.cursorSettingsToolStripMenuItem.Size = new System.Drawing.Size(168, 33);
+            this.cursorSettingsToolStripMenuItem.Size = new System.Drawing.Size(169, 29);
             this.cursorSettingsToolStripMenuItem.Text = "Cursor settings";
             // 
             // drawCrosshairToolStripMenuItem
             // 
             this.drawCrosshairToolStripMenuItem.Name = "drawCrosshairToolStripMenuItem";
-            this.drawCrosshairToolStripMenuItem.Size = new System.Drawing.Size(230, 34);
+            this.drawCrosshairToolStripMenuItem.Size = new System.Drawing.Size(227, 30);
             this.drawCrosshairToolStripMenuItem.Text = "Draw crosshair";
             this.drawCrosshairToolStripMenuItem.Click += new System.EventHandler(this.drawCrosshairToolStripMenuItem_Click);
             // 
             // listBoxClass
             // 
-            this.listBoxClass.Font = new System.Drawing.Font("Nunito", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.listBoxClass.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.listBoxClass.ForeColor = System.Drawing.SystemColors.WindowText;
             this.listBoxClass.FormattingEnabled = true;
-            this.listBoxClass.ItemHeight = 29;
+            this.listBoxClass.ItemHeight = 25;
             this.listBoxClass.Items.AddRange(new object[] {
             "class 1",
             "class 2",
@@ -161,16 +165,16 @@
             this.listBoxClass.Location = new System.Drawing.Point(1072, 85);
             this.listBoxClass.Name = "listBoxClass";
             this.listBoxClass.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.listBoxClass.Size = new System.Drawing.Size(180, 526);
+            this.listBoxClass.Size = new System.Drawing.Size(180, 504);
             this.listBoxClass.TabIndex = 7;
             // 
             // labelImageCount
             // 
             this.labelImageCount.AutoSize = true;
-            this.labelImageCount.Font = new System.Drawing.Font("Nunito", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelImageCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelImageCount.Location = new System.Drawing.Point(501, 38);
             this.labelImageCount.Name = "labelImageCount";
-            this.labelImageCount.Size = new System.Drawing.Size(130, 29);
+            this.labelImageCount.Size = new System.Drawing.Size(130, 25);
             this.labelImageCount.TabIndex = 8;
             this.labelImageCount.Text = "Image 0 of 0";
             // 
@@ -187,7 +191,7 @@
             // 
             this.buttonGoto.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonGoto.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonGoto.Font = new System.Drawing.Font("Nunito ExtraBold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonGoto.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.buttonGoto.Location = new System.Drawing.Point(1165, 46);
             this.buttonGoto.Name = "buttonGoto";
             this.buttonGoto.Size = new System.Drawing.Size(87, 23);
@@ -206,6 +210,29 @@
             this.imagePanel.Click += new System.EventHandler(this.imagePanel_Click);
             this.imagePanel.MouseLeave += new System.EventHandler(this.imagePanel_MouseLeave);
             this.imagePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseMove);
+            // 
+            // labellingModeToolStripMenuItem
+            // 
+            this.labellingModeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.imageSegmentationToolStripMenuItem,
+            this.datasetTTVSplitToolStripMenuItem});
+            this.labellingModeToolStripMenuItem.Name = "labellingModeToolStripMenuItem";
+            this.labellingModeToolStripMenuItem.Size = new System.Drawing.Size(170, 29);
+            this.labellingModeToolStripMenuItem.Text = "Labelling mode";
+            // 
+            // imageSegmentationToolStripMenuItem
+            // 
+            this.imageSegmentationToolStripMenuItem.Checked = true;
+            this.imageSegmentationToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.imageSegmentationToolStripMenuItem.Name = "imageSegmentationToolStripMenuItem";
+            this.imageSegmentationToolStripMenuItem.Size = new System.Drawing.Size(280, 30);
+            this.imageSegmentationToolStripMenuItem.Text = "Image Segmentation";
+            // 
+            // datasetTTVSplitToolStripMenuItem
+            // 
+            this.datasetTTVSplitToolStripMenuItem.Name = "datasetTTVSplitToolStripMenuItem";
+            this.datasetTTVSplitToolStripMenuItem.Size = new System.Drawing.Size(280, 30);
+            this.datasetTTVSplitToolStripMenuItem.Text = "Dataset TTV split";
             // 
             // MainWindow
             // 
@@ -252,5 +279,8 @@
         private TextBox textBoxGoto;
         private Button buttonGoto;
         private PictureBox imagePanel;
+        private ToolStripMenuItem labellingModeToolStripMenuItem;
+        private ToolStripMenuItem imageSegmentationToolStripMenuItem;
+        private ToolStripMenuItem datasetTTVSplitToolStripMenuItem;
     }
 }

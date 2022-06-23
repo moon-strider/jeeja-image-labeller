@@ -23,9 +23,17 @@ namespace Jeeja_ImageLabeller
 
         List<string> images;
 
+        private List<ProgramMode> modes = new List<ProgramMode>
+        {
+            new ProgramMode("Image Labeller", "Draw bounding boxes of required objects on images. Used for compiling datasets."),
+            new ProgramMode("Detection hierarchy", "Mark images with a unique class from your own list and move them to corresponding folders"),
+            new ProgramMode("Dataset TTV split", "Split dataset images into Train, Test and Validate using preferred data coefficients")
+        };
+
+        ModeController modeController;
+
         public MainWindow()
         {
-
             InitializeComponent();
             KeyPreview = true;
 
@@ -34,7 +42,7 @@ namespace Jeeja_ImageLabeller
             classesLocation = ".";
             labelsLocation = ".";
             images = new List<string>(Directory.GetFiles("."));
-
+            modeController = new ModeController(modes);
         }
 
         public void DrawRectangle(Pen pen, Graphics g, int x1, int y1, int x2, int y2)
@@ -61,7 +69,7 @@ namespace Jeeja_ImageLabeller
             if (x1 < x2 && y1 > y2) { return new float[] { x1 + RectangleGetWidth(x1, x2) / 2, y1 - RectangleGetHeight(y1, y2) / 2 }; }
             if (x1 > x2 && y1 < y2) { return new float[] { x1 - RectangleGetWidth(x1, x2) / 2, y1 + RectangleGetHeight(y1, y2) / 2 }; }
             if (x1 > x2 && y1 > y2) { return new float[] { x1 - RectangleGetWidth(x1, x2) / 2, y1 - RectangleGetHeight(y1, y2) / 2 }; }
-            return null;
+            throw new Exception("You drew an incorrect rectangle, my guy.");
         }
 
         public string RectangleNormalize(float w, float h, float[] c, float ww, float hh)
@@ -331,3 +339,6 @@ namespace Jeeja_ImageLabeller
         }
     }
 }
+
+// TODO: create a list of button layouts for each program mode
+// TODO: implement hierarchy mode and TTV split mode

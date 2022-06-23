@@ -23,7 +23,8 @@ namespace Jeeja_ImageLabeller
         int imageWidth;
         int imageHeight;
 
-        public Image curImage { 
+        public Image curImage 
+        { 
             get 
             {
                 SetResizeImage(Image.FromFile(images[imgIndex]));
