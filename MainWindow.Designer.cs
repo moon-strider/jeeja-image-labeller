@@ -39,14 +39,15 @@
             this.autosaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cursorSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawCrosshairToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labellingModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageSegmentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.datasetTTVSplitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hierarchySplitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBoxClass = new System.Windows.Forms.ListBox();
             this.labelImageCount = new System.Windows.Forms.Label();
             this.textBoxGoto = new System.Windows.Forms.TextBox();
             this.buttonGoto = new System.Windows.Forms.Button();
             this.imagePanel = new System.Windows.Forms.PictureBox();
-            this.labellingModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.imageSegmentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.datasetTTVSplitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imagePanel)).BeginInit();
             this.SuspendLayout();
@@ -151,6 +152,39 @@
             this.drawCrosshairToolStripMenuItem.Text = "Draw crosshair";
             this.drawCrosshairToolStripMenuItem.Click += new System.EventHandler(this.drawCrosshairToolStripMenuItem_Click);
             // 
+            // labellingModeToolStripMenuItem
+            // 
+            this.labellingModeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.imageSegmentationToolStripMenuItem,
+            this.datasetTTVSplitToolStripMenuItem,
+            this.hierarchySplitToolStripMenuItem});
+            this.labellingModeToolStripMenuItem.Name = "labellingModeToolStripMenuItem";
+            this.labellingModeToolStripMenuItem.Size = new System.Drawing.Size(170, 29);
+            this.labellingModeToolStripMenuItem.Text = "Labelling mode";
+            // 
+            // imageSegmentationToolStripMenuItem
+            // 
+            this.imageSegmentationToolStripMenuItem.Checked = true;
+            this.imageSegmentationToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.imageSegmentationToolStripMenuItem.Name = "imageSegmentationToolStripMenuItem";
+            this.imageSegmentationToolStripMenuItem.Size = new System.Drawing.Size(249, 30);
+            this.imageSegmentationToolStripMenuItem.Text = "Image Labelling";
+            this.imageSegmentationToolStripMenuItem.Click += new System.EventHandler(this.imageSegmentationToolStripMenuItem_Click);
+            // 
+            // datasetTTVSplitToolStripMenuItem
+            // 
+            this.datasetTTVSplitToolStripMenuItem.Name = "datasetTTVSplitToolStripMenuItem";
+            this.datasetTTVSplitToolStripMenuItem.Size = new System.Drawing.Size(249, 30);
+            this.datasetTTVSplitToolStripMenuItem.Text = "Dataset TTV split";
+            this.datasetTTVSplitToolStripMenuItem.Click += new System.EventHandler(this.datasetTTVSplitToolStripMenuItem_Click);
+            // 
+            // hierarchySplitToolStripMenuItem
+            // 
+            this.hierarchySplitToolStripMenuItem.Name = "hierarchySplitToolStripMenuItem";
+            this.hierarchySplitToolStripMenuItem.Size = new System.Drawing.Size(249, 30);
+            this.hierarchySplitToolStripMenuItem.Text = "Hierarchy split";
+            this.hierarchySplitToolStripMenuItem.Click += new System.EventHandler(this.hierarchySplitToolStripMenuItem_Click);
+            // 
             // listBoxClass
             // 
             this.listBoxClass.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -165,7 +199,7 @@
             this.listBoxClass.Location = new System.Drawing.Point(1072, 85);
             this.listBoxClass.Name = "listBoxClass";
             this.listBoxClass.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.listBoxClass.Size = new System.Drawing.Size(180, 504);
+            this.listBoxClass.Size = new System.Drawing.Size(180, 329);
             this.listBoxClass.TabIndex = 7;
             // 
             // labelImageCount
@@ -210,29 +244,6 @@
             this.imagePanel.Click += new System.EventHandler(this.imagePanel_Click);
             this.imagePanel.MouseLeave += new System.EventHandler(this.imagePanel_MouseLeave);
             this.imagePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseMove);
-            // 
-            // labellingModeToolStripMenuItem
-            // 
-            this.labellingModeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.imageSegmentationToolStripMenuItem,
-            this.datasetTTVSplitToolStripMenuItem});
-            this.labellingModeToolStripMenuItem.Name = "labellingModeToolStripMenuItem";
-            this.labellingModeToolStripMenuItem.Size = new System.Drawing.Size(170, 29);
-            this.labellingModeToolStripMenuItem.Text = "Labelling mode";
-            // 
-            // imageSegmentationToolStripMenuItem
-            // 
-            this.imageSegmentationToolStripMenuItem.Checked = true;
-            this.imageSegmentationToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.imageSegmentationToolStripMenuItem.Name = "imageSegmentationToolStripMenuItem";
-            this.imageSegmentationToolStripMenuItem.Size = new System.Drawing.Size(280, 30);
-            this.imageSegmentationToolStripMenuItem.Text = "Image Segmentation";
-            // 
-            // datasetTTVSplitToolStripMenuItem
-            // 
-            this.datasetTTVSplitToolStripMenuItem.Name = "datasetTTVSplitToolStripMenuItem";
-            this.datasetTTVSplitToolStripMenuItem.Size = new System.Drawing.Size(280, 30);
-            this.datasetTTVSplitToolStripMenuItem.Text = "Dataset TTV split";
             // 
             // MainWindow
             // 
@@ -282,5 +293,6 @@
         private ToolStripMenuItem labellingModeToolStripMenuItem;
         private ToolStripMenuItem imageSegmentationToolStripMenuItem;
         private ToolStripMenuItem datasetTTVSplitToolStripMenuItem;
+        private ToolStripMenuItem hierarchySplitToolStripMenuItem;
     }
 }

@@ -27,6 +27,9 @@ namespace Jeeja_ImageLabeller
                 item.switchActive(false);
             }
             modes[id].switchActive(true);
+            activeMode = modes[id];
         }
+
+        public ProgramMode getActiveMode() => activeMode;
     }
 }

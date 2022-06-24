@@ -11,7 +11,7 @@ namespace Jeeja_ImageLabeller
 {
     internal class ImageSelector
     {
-        private int imageIndex;
+        public int imageIndex { get; private set; }
 
         public List<string> images;
 

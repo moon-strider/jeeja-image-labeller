@@ -18,6 +18,8 @@ namespace Jeeja_ImageLabeller
         bool p1Captured = false;
 
         int[] p1;
+        Action[] saveMethods;
+        Action activeSaveMethod;
 
         ImageSelector imageSelector;
 
@@ -43,6 +45,12 @@ namespace Jeeja_ImageLabeller
             labelsLocation = ".";
             images = new List<string>(Directory.GetFiles("."));
             modeController = new ModeController(modes);
+            saveMethods = new Action[] { 
+                () => SaveLabels(), 
+                () => SaveHierarchy(),
+                () => { }
+            };
+            activeSaveMethod = saveMethods[0];
         }
 
         public void DrawRectangle(Pen pen, Graphics g, int x1, int y1, int x2, int y2)
@@ -109,6 +117,37 @@ namespace Jeeja_ImageLabeller
             }
         }
 
+        public void SaveHierarchy() // FIXME
+        {
+            if (listBoxClass.SelectedItem != null)
+            {
+                string pathToLoc = $"{labelsLocation}\\";
+                string filename = imageSelector.images[imageSelector.imageIndex].Split("\\").Reverse().First();
+                if (!Directory.Exists(pathToLoc))
+                {
+                    throw new Exception("The specified save path is incorrect");
+                }
+                try
+                {
+                    if (!Directory.Exists($"{labelsLocation}\\{listBoxClass.GetItemText(listBoxClass.SelectedItem)}"))
+                    {
+                        Directory.CreateDirectory($"{labelsLocation}\\{listBoxClass.GetItemText(listBoxClass.SelectedItem)}");
+                    }
+                    //MessageBox.Show($"moving {imagesLocation}\\{filename} to {labelsLocation}\\{filename}");
+                    File.Move($"{imagesLocation}\\{filename}", 
+                        $"{labelsLocation}\\{listBoxClass.GetItemText(listBoxClass.SelectedItem)}\\{filename}");
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"File move operation has failed: {e.Message}");
+                }
+            }
+            else
+            {
+                throw new Exception("No class selected");
+            }
+        }
+
         private void loadListBox()
         {
             if (File.Exists(classesLocation))
@@ -140,6 +179,8 @@ namespace Jeeja_ImageLabeller
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
             folderBrowserDialog.ShowDialog();
             imagesLocation = folderBrowserDialog.SelectedPath;
+
+            if (imagesLocation == "") return;
             
             imageSelector = new ImageSelector(imagesLocation);
 
@@ -202,21 +243,25 @@ namespace Jeeja_ImageLabeller
             openFileDialog.Filter = "(*.txt)|*.txt";
             openFileDialog.ShowDialog();
             classesLocation = openFileDialog.FileName;
+            if (classesLocation == "") return;
             loadListBox();
         }
 
         private void buttonNext_Click(object sender, EventArgs e)
         {
-            SaveLabels();
+            activeSaveMethod();
             DrawImage(imageSelector.GetNextImage());
             imagePanel.Refresh();
         }
 
         private void buttonPrev_Click(object sender, EventArgs e)
         {
-            SaveLabels();
-            DrawImage(imageSelector.GetPrevImage());
-            imagePanel.Refresh();
+            if (File.Exists(imageSelector.images[imageSelector.imgIndex - 1]))
+            {
+                activeSaveMethod();
+                DrawImage(imageSelector.GetPrevImage());
+                imagePanel.Refresh();
+            }
         }
 
         private void buttonGoto_Click(object sender, EventArgs e)
@@ -259,7 +304,8 @@ namespace Jeeja_ImageLabeller
                 DrawImage(imageSelector.curImage);
             }
 
-            if (drawCrosshairToolStripMenuItem.Checked)
+            if (drawCrosshairToolStripMenuItem.Checked 
+                & modeController.getActiveMode().getName() == "Image Labeller")
             {
                 Region r = new Region();
                 r.Union(new Rectangle(0, lastY, imagePanel.Width, 1));
@@ -289,7 +335,7 @@ namespace Jeeja_ImageLabeller
 
         private void imagePanel_Click(object sender, EventArgs e)
         {
-            if (imageSelector != null)
+            if (imageSelector != null & modeController.getActiveMode().getName() == "Image Labeller")
             {
                 MouseEventArgs me = (MouseEventArgs)e;
                 if (me.Button == MouseButtons.Left)
@@ -336,6 +382,48 @@ namespace Jeeja_ImageLabeller
             {
                 CtrlZ();
             }
+        }
+
+        private void hierarchySplitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            modeController.activateMode(1);
+            autosaveToolStripMenuItem.Enabled = false;
+            drawCrosshairToolStripMenuItem.Enabled = false;
+            loadClassesFromToolStripMenuItem.Text = "Load classes from";
+            saveLabelsToToolStripMenuItem.Text = "Split root folder";
+            activeSaveMethod = saveMethods[1];
+
+            hierarchySplitToolStripMenuItem.Checked = true;
+            datasetTTVSplitToolStripMenuItem.Checked = false;
+            imageSegmentationToolStripMenuItem.Checked = false;
+        }
+
+        private void datasetTTVSplitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            modeController.activateMode(2);
+            autosaveToolStripMenuItem.Enabled = false;
+            drawCrosshairToolStripMenuItem.Enabled = false;
+            loadClassesFromToolStripMenuItem.Text = "Load proportions from (tr te va)";
+            saveLabelsToToolStripMenuItem.Text = "Dataset root folder";
+            activeSaveMethod = saveMethods[2];
+
+            hierarchySplitToolStripMenuItem.Checked = false;
+            datasetTTVSplitToolStripMenuItem.Checked = true;
+            imageSegmentationToolStripMenuItem.Checked = false;
+        }
+
+        private void imageSegmentationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            activeSaveMethod = saveMethods[0];
+            modeController.activateMode(0);
+            autosaveToolStripMenuItem.Enabled = true;
+            drawCrosshairToolStripMenuItem.Enabled = true;
+            loadClassesFromToolStripMenuItem.Text = "Load classes from";
+            saveLabelsToToolStripMenuItem.Text = "Save labels to";
+
+            hierarchySplitToolStripMenuItem.Checked = false;
+            datasetTTVSplitToolStripMenuItem.Checked = false;
+            imageSegmentationToolStripMenuItem.Checked = true;
         }
     }
 }
