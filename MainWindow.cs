@@ -14,6 +14,7 @@ namespace Jeeja_ImageLabeller
         string labelsLocation;
         Graphics g;
         Bitmap bmp;
+        Random random;
 
         bool p1Captured = false;
 
@@ -21,7 +22,7 @@ namespace Jeeja_ImageLabeller
         Action[] saveMethods;
         Action activeSaveMethod;
 
-        ImageSelector imageSelector;
+        ImageSelector? imageSelector;
 
         List<string> images;
 
@@ -29,7 +30,7 @@ namespace Jeeja_ImageLabeller
         {
             new ProgramMode("Image Labeller", "Draw bounding boxes of required objects on images. Used for compiling datasets."),
             new ProgramMode("Detection hierarchy", "Mark images with a unique class from your own list and move them to corresponding folders"),
-            new ProgramMode("Dataset TTV split", "Split dataset images into Train, Test and Validate using preferred data coefficients")
+            new ProgramMode("Split", "Split dataset images into Train, Test and Validate using preferred data coefficients")
         };
 
         ModeController modeController;
@@ -117,7 +118,7 @@ namespace Jeeja_ImageLabeller
             }
         }
 
-        public void SaveHierarchy() // FIXME
+        public void SaveHierarchy()
         {
             if (listBoxClass.SelectedItem != null)
             {
@@ -133,7 +134,6 @@ namespace Jeeja_ImageLabeller
                     {
                         Directory.CreateDirectory($"{labelsLocation}\\{listBoxClass.GetItemText(listBoxClass.SelectedItem)}");
                     }
-                    //MessageBox.Show($"moving {imagesLocation}\\{filename} to {labelsLocation}\\{filename}");
                     File.Move($"{imagesLocation}\\{filename}", 
                         $"{labelsLocation}\\{listBoxClass.GetItemText(listBoxClass.SelectedItem)}\\{filename}");
                 }
@@ -181,8 +181,10 @@ namespace Jeeja_ImageLabeller
             imagesLocation = folderBrowserDialog.SelectedPath;
 
             if (imagesLocation == "") return;
+
+            bool subdirs = modeController.getActiveMode().getName() == "Split";
             
-            imageSelector = new ImageSelector(imagesLocation);
+            imageSelector = new ImageSelector(imagesLocation, subdirs);
 
             if (images.Count() > 0)
             {
@@ -220,6 +222,7 @@ namespace Jeeja_ImageLabeller
 
         public void CtrlZ()
         {
+            // TODO: implement undo for all modes
             if (imageSelector != null & imageSelector.Rectangles[imageSelector.imgIndex].Count() > 0)
             {
                 imageSelector.Rectangles[imageSelector.imgIndex].
@@ -228,6 +231,68 @@ namespace Jeeja_ImageLabeller
                     RemoveAt(imageSelector.ClassI[imageSelector.imgIndex].Count() - 1);
                 imagePanel.Refresh();
             }
+        }
+
+
+        public void TTVFill(int abs, string dst, ref int imageNumbers)
+        {
+            random = new Random();
+            int i = 0;
+            dst = dst.Split("\\").Reverse().First();
+            while (i < abs)
+            {
+                labelImageCount.Text = $"{dst}: {i} images moved so far";
+                int randomNumber = random.Next(0, imageNumbers);
+
+                string classname = imageSelector.images[randomNumber].Split("\\").Reverse().ElementAt(1); //FIXME ignore TTV dirs
+                string filename = imageSelector.images[randomNumber].Split("\\").Reverse().First();
+
+                if (!Directory.Exists($"{labelsLocation}\\{dst}\\{classname}"))
+                    Directory.CreateDirectory($"{labelsLocation}\\{dst}\\{classname}");
+
+                //MessageBox.Show($"Moving {imageSelector.images[randomNumber]} to {labelsLocation}\\{dst}\\{classname}\\{filename}");
+                File.Move(imageSelector.images[randomNumber], $"{labelsLocation}\\{dst}\\{classname}\\{filename}");
+
+                imageSelector.images.RemoveAt(randomNumber);
+                imageNumbers -= 1;
+                ++i;
+            }
+        }
+
+
+        public void TTVSplit(int TR, int TE, int VA)
+        {
+            int imageNumbers = imageSelector.ImagesCount();
+
+            int ONE = Convert.ToInt32(imageNumbers / (TR + TE + VA));
+
+            ONE = ONE > imageNumbers ? imageNumbers: ONE;
+
+            int realTR = ONE * TR;
+            int realTE = ONE * TE;
+            int realVA = imageNumbers - realTR - realTE;
+
+            MessageBox.Show($"{realTR} {realTE} {realVA}");
+
+            List<string> classNames = Directory.GetDirectories($"{imagesLocation}").ToList();
+
+            string TRDir = "", TEDir = "", VADir = "";
+
+            if (!Directory.Exists($"{labelsLocation}\\train"))
+                TRDir = Directory.CreateDirectory($"{labelsLocation}\\train").ToString();
+            if (!Directory.Exists($"{labelsLocation}\\test"))
+                TEDir = Directory.CreateDirectory($"{labelsLocation}\\test").ToString();
+            if (!Directory.Exists($"{labelsLocation}\\validation"))
+                VADir = Directory.CreateDirectory($"{labelsLocation}\\validation").ToString();
+
+            if (TRDir == "" || TEDir == "" || VADir == "")
+                throw new Exception("ERROR: could not create TTV directories");
+
+            TTVFill(realTR, TRDir, ref imageNumbers);
+            TTVFill(realTE, TEDir, ref imageNumbers);
+            TTVFill(realVA, VADir, ref imageNumbers);
+            // Remove empty dirs
+            imageSelector = null;
         }
 
         private void saveLabelsToToolStripMenuItem_Click(object sender, EventArgs e)
@@ -249,14 +314,17 @@ namespace Jeeja_ImageLabeller
 
         private void buttonNext_Click(object sender, EventArgs e)
         {
-            activeSaveMethod();
-            DrawImage(imageSelector.GetNextImage());
-            imagePanel.Refresh();
+            if (imageSelector != null)
+            {
+                activeSaveMethod();
+                DrawImage(imageSelector.GetNextImage());
+                imagePanel.Refresh();
+            }
         }
 
         private void buttonPrev_Click(object sender, EventArgs e)
         {
-            if (File.Exists(imageSelector.images[imageSelector.imgIndex - 1]))
+            if (imageSelector != null & File.Exists(imageSelector.images[imageSelector.imgIndex - 1]))
             {
                 activeSaveMethod();
                 DrawImage(imageSelector.GetPrevImage());
@@ -266,18 +334,39 @@ namespace Jeeja_ImageLabeller
 
         private void buttonGoto_Click(object sender, EventArgs e)
         {
-            try
+            if (imageSelector != null)
             {
-                imageSelector.imgIndex = Convert.ToInt32(textBoxGoto.Text) - 1;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error! {ex.Message}");
-                return;
-            }
+                if (modeController.getActiveMode().getName() != "Split")
+                {
+                    try
+                    {
+                        imageSelector.imgIndex = Convert.ToInt32(textBoxGoto.Text) - 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error! {ex.Message}");
+                        return;
+                    }
 
-            DrawImage(imageSelector.curImage);
-            imagePanel.Refresh();
+                    DrawImage(imageSelector.curImage);
+                    imagePanel.Refresh();
+                }
+                else
+                {
+                    int TR, TE, VA;
+                    try
+                    {
+                        TR = Convert.ToInt32(listBoxClass.GetItemText(listBoxClass.Items[0]));
+                        TE = Convert.ToInt32(listBoxClass.GetItemText(listBoxClass.Items[1]));
+                        VA = Convert.ToInt32(listBoxClass.GetItemText(listBoxClass.Items[2]));
+                    }
+                    catch
+                    {
+                        throw new Exception("Entered proportions are incorrect.");
+                    }
+                    TTVSplit(TR, TE, VA);
+                }
+            }
         }
 
         int lastX = 0;
@@ -392,6 +481,7 @@ namespace Jeeja_ImageLabeller
             loadClassesFromToolStripMenuItem.Text = "Load classes from";
             saveLabelsToToolStripMenuItem.Text = "Split root folder";
             activeSaveMethod = saveMethods[1];
+            buttonGoto.Text = "Go";
 
             hierarchySplitToolStripMenuItem.Checked = true;
             datasetTTVSplitToolStripMenuItem.Checked = false;
@@ -406,6 +496,7 @@ namespace Jeeja_ImageLabeller
             loadClassesFromToolStripMenuItem.Text = "Load proportions from (tr te va)";
             saveLabelsToToolStripMenuItem.Text = "Dataset root folder";
             activeSaveMethod = saveMethods[2];
+            buttonGoto.Text = "Split";
 
             hierarchySplitToolStripMenuItem.Checked = false;
             datasetTTVSplitToolStripMenuItem.Checked = true;
@@ -420,6 +511,7 @@ namespace Jeeja_ImageLabeller
             drawCrosshairToolStripMenuItem.Enabled = true;
             loadClassesFromToolStripMenuItem.Text = "Load classes from";
             saveLabelsToToolStripMenuItem.Text = "Save labels to";
+            buttonGoto.Text = "Go";
 
             hierarchySplitToolStripMenuItem.Checked = false;
             datasetTTVSplitToolStripMenuItem.Checked = false;

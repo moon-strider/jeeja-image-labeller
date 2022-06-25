@@ -104,7 +104,7 @@ namespace Jeeja_ImageLabeller
 
         public int ImagesCount() => images.Count();
 
-        public Image GetNextImage()
+        public Image GetNextImage() //FIXME: fix crash after trying to get image after last
         {
             imgIndex++;
             SetResizeImage(Image.FromFile(images[imgIndex]));
@@ -126,11 +126,25 @@ namespace Jeeja_ImageLabeller
             currentImage = ResizeImage(img, 1054, 526);
         }
 
-        public ImageSelector(string imagesPath)
+        public ImageSelector(string imagesPath, bool InSubdirs)
         {
             classI = new List<List<string>>();
             rectangles = new List<List<int[]>>();
-            images = new List<string>(Directory.GetFiles(imagesPath));
+
+            if (!InSubdirs)
+            {
+                images = new List<string>(Directory.GetFiles(imagesPath));
+            }
+            else
+            {
+                List<string> subdirs = Directory.GetDirectories(imagesPath).ToList();
+                images = new List<string> { };
+                foreach (string dir in subdirs)
+                {
+                    images.AddRange(Directory.GetFiles(dir).ToList());
+                }
+            }
+
             imgIndex = 0;
             Regex regex = new Regex(@".*\.(?i)(gif|jpe?g|tiff?|png|webp|bmp)$(?-i)");
 
@@ -142,7 +156,7 @@ namespace Jeeja_ImageLabeller
                 }
             }
 
-            for (int i = 0; i < images.Count(); i++)
+            for (int i = 0; i < images.Count(); ++i)
             {
                 InitRectangles();
                 InitClasses();
